@@ -1,6 +1,6 @@
 # Discourse Backups to Dropbox
 
-Backups are useless unles they are off-site. This plugin sync your automatic backups on Dropbox.
+Backups are useless unless they are off-site. This plugin sync your automatic backups on Dropbox.
 
 
 ## Installation
