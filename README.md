@@ -15,4 +15,4 @@ You need to enable the plugin on Settings -> Plugins and fill you Dropbox API Ke
 
 ## About
 
-This is a work in progress! Feel free to use and ask questions here, or on [Meta](meta.discourse.org).
+This is a work in progress! Feel free to use and ask questions here, or on [Meta](https://meta.discourse.org/t/discourse-backups-to-dropbox/51176?u=falco).
