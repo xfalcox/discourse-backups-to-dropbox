@@ -1,6 +1,6 @@
 # name: discourse-backups-to-dropbox
 # about: Backups discourse backups in dropbox
-# version: 0.0.1
+# version: 0.0.2
 # authors: Rafael dos Santos Silva <xfalcox@gmail.com>
 # url: https://github.com/xfalcox/discourse-backups-to-dropbox
 
