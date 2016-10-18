@@ -10,7 +10,7 @@ Proceed with a normal [installation of a plugin](https://meta.discourse.org/t/in
 
 ## After Installation
 
-You need to enable the plugin on Settings -> Plugins and fill you Dropbox API Key that you can get [here](https://www.dropbox.com/developers/apps/create).
+You need to enable the plugin on Settings -> Plugins and fill you Dropbox Generated Access Token that you can get [here](https://www.dropbox.com/developers/apps/create).
 
 
 ## About
