@@ -10,7 +10,10 @@ Proceed with a normal [installation of a plugin](https://meta.discourse.org/t/in
 
 ## After Installation
 
-You need to enable the plugin on Settings -> Plugins and fill you Dropbox Generated Access Token that you can get [here](https://www.dropbox.com/developers/apps/create).
+You need to enable the plugin on Settings -> Plugins and fill you Dropbox Generated Access Token that you can get [here](https://www.dropbox.com/developers/apps/create):
+
+![Dropbox Generated Access Token](https://cloud.githubusercontent.com/assets/1385470/19462641/1cd27538-94cd-11e6-8ec2-0ae37f3a1211.png)
+
 
 
 ## About
