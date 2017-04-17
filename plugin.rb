@@ -4,7 +4,9 @@
 # authors: Rafael dos Santos Silva <xfalcox@gmail.com>
 # url: https://github.com/xfalcox/discourse-backups-to-dropbox
 
-gem 'addressable', '2.4.0', {require: false }
+gem 'public_suffix', '2.0.5', {require: false }
+
+gem 'addressable', '2.5.1', {require: false }
 gem 'http_parser.rb', '0.6.0', {require: false }
 gem 'http-form_data', '1.0.1', {require: false }
 
