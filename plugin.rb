@@ -5,9 +5,11 @@
 # url: https://github.com/xfalcox/discourse-backups-to-dropbox
 
 gem 'public_suffix', '2.0.5', {require: false }
+gem 'domain_name', '0.5.20170404', {require: false }
 
 gem 'addressable', '2.5.1', {require: false }
 gem 'http_parser.rb', '0.6.0', {require: false }
+gem 'http-cookie', '1.0.3', {require: false }
 gem 'http-form_data', '1.0.1', {require: false }
 
 gem 'http', '2.0.3', {require: false }
