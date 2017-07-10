@@ -2,4 +2,4 @@ en:
   site_settings:
     discourse_backups_to_dropbox_enabled: "Enable the dropbox backups plugin. After enabling this, it will work on your next backup"
     discourse_backups_to_dropbox_quantity: "How many backups will be kept in Dropbox"
-    discourse_backups_to_dropbox_api_key: "Your Dropbox Dropbox Generated Access Token created on https://www.dropbox.com/developers/apps/create"
+    discourse_backups_to_dropbox_api_key: "Your Dropbox Generated Access Token created on https://www.dropbox.com/developers/apps/create"
