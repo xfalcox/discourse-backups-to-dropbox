@@ -17,26 +17,25 @@ module DiscourseBackupToDropbox
     end
 
     def perform_sync
+      local_backup_files     = Backup.all.take(SiteSetting.discourse_backups_to_dropbox_quantity)
+      file_difference_local  = local_backup_files - dropbox_backup_files
+      full_path  = backup.path   # took out the loop here
+      filename   = backup.filename
+      size       = backup.size
+      upload(@dbx, folder_name, filename, full_path, size)
+
+      file_difference_remote = dropbox_backup_files - local_backup_files
+      file_difference_remote.delete(@dbx, "/#{folder_name}/#{filename}") # passed @dbx as a second argument here, dont know if that works
+    end                                                                  # and took out the loop
+
+    def create_folder # this is rather a create and pick folder method
       folder_name = Discourse.current_hostname
       begin
         @dbx.create_folder("/#{folder_name}")
       rescue
         #folder already exists
       end
-
       dropbox_backup_files = @dbx.list_folder("/#{folder_name}").map(&:name)
-
-      local_backup_files = Backup.all.map(&:filename).take(SiteSetting.discourse_backups_to_dropbox_quantity)
-
-      (local_backup_files - dropbox_backup_files).each do |filename|
-        full_path = Backup[filename].path
-        size = Backup[filename].size
-        upload(@dbx, folder_name, filename, full_path, size)
-      end
-
-      (dropbox_backup_files - local_backup_files).each do |filename|
-        @dbx.delete("/#{folder_name}/#{filename}")
-      end
     end
 
     def self.upload(@dbx, folder_name, file_name, full_path, size)
