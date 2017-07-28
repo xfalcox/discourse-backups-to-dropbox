@@ -15,11 +15,11 @@ module DiscourseBackupToDropbox
 
     protected
 
-    def can_sync? #needs to be true in order to perform sync
+    def can_sync?
       @turned_on && @api_key.present? && backup.present?
     end
 
-    def add_to_folder(file) # this is rather a create and pick folder method
+    def add_to_folder(file)
       folder_name = Discourse.current_hostname
       begin
         dbx.create_folder("/#{folder_name}")
