@@ -22,11 +22,11 @@ module DiscourseBackupToDropbox
     def add_to_folder(file) # this is rather a create and pick folder method
       folder_name = Discourse.current_hostname
       begin
-        @dbx.create_folder("/#{folder_name}")
+        dbx.create_folder("/#{folder_name}")
       rescue
         #folder already exists
       end
-      dropbox_backup_files   = @dbx.list_folder("/#{folder_name}").map(&:name)
+      dropbox_backup_files   = dbx.list_folder("/#{folder_name}").map(&:name)
     end
 
     def perform_sync
@@ -42,7 +42,7 @@ module DiscourseBackupToDropbox
 
     def upload(folder_name, file_name, full_path, size)
       if size < UPLOAD_MAX_SIZE then
-        @dbx.upload("/#{folder_name}/#{file_name}", File.open(full_path, "r"))
+        dbx.upload("/#{folder_name}/#{file_name}", File.open(full_path, "r"))
       else
         backup.chunked_upload(folder_name, file_name, full_path)
       end
@@ -52,13 +52,13 @@ module DiscourseBackupToDropbox
       File.open(full_path) do |f|
         loops = f.size / CHUNK_SIZE
 
-        cursor = @dbx.start_upload_session(f.read(CHUNK_SIZE))
+        cursor = dbx.start_upload_session(f.read(CHUNK_SIZE))
 
         (loops-1).times do |i|
-          @dbx.append_upload_session( cursor, f.read(CHUNK_SIZE) )
+          dbx.append_upload_session( cursor, f.read(CHUNK_SIZE) )
         end
 
-        @dbx.finish_upload_session(cursor, "/#{folder_name}/#{file_name}", f.read(CHUNK_SIZE))
+        dbx.finish_upload_session(cursor, "/#{folder_name}/#{file_name}", f.read(CHUNK_SIZE))
       end
     end
 
