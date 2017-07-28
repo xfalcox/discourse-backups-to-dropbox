@@ -1,18 +1,23 @@
 module DiscourseBackupToDropbox
-  class DropboxSynchronizer
+  class DropboxSynchronizer < Synchronizer #inherit from the base class
     CHUNK_SIZE = 25600000
     UPLOAD_MAX_SIZE = CHUNK_SIZE * 4
 
     def initialize(backup)
-      super(backup)
-      @dbx = Dropbox::Client.new(SiteSetting.discourse_backups_to_dropbox_api_key)
+      super(backup) #need to initialize neccessary params for the can_sync?
+      @api_key = SiteSetting.discourse_backups_to_dropbox_api_key
+      @turned_on = SiteSetting.discourse_backups_to_dropbox_enabled
+      @dbx = Dropbox::Client.new(@api_key)
     end
 
     protected
 
+    def can_sync? #needs to be true in order to perform sync
+      @turned_on && @api_key.present? && backup.present?
+    end
+
     def perform_sync
       folder_name = Discourse.current_hostname
-
       begin
         @dbx.create_folder("/#{folder_name}")
       rescue
