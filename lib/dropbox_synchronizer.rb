@@ -35,7 +35,6 @@ module DiscourseBackupToDropbox
       size       = backup.size
       file       = upload(folder_name, filename, full_path, size)
 
-
       file_difference_remote = dropbox_backup_files - local_backup_files
       file_difference_remote.dbx.delete("/#{folder_name}/#{filename}") # used dbx, as a method here
     end                                                                  # and took out the loop
