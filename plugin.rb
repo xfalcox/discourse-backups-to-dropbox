@@ -1,4 +1,4 @@
-# name: discourse-backups-to-dropbox
+# name: discourse-sync-to-dropbox
 # about: Backups discourse backups in dropbox
 # version: 0.0.2
 # authors: Rafael dos Santos Silva <xfalcox@gmail.com>
