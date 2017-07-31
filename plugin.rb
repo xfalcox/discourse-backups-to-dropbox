@@ -16,7 +16,7 @@ gem 'http', '2.0.3', {require: false }
 
 gem 'dropbox-sdk-v2', '0.0.3', { require: false }
 
-enabled_site_setting :discourse_backups_to_dropbox_enabled
+enabled_site_setting :discourse_sync_to_dropbox_enabled
 
 require 'dropbox'
 

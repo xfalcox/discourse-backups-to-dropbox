@@ -5,8 +5,8 @@ module DiscourseBackupToDropbox
 
     def initialize(backup)
       super(backup) #need to initialize neccessary params for the can_sync?
-      @api_key = SiteSetting.discourse_backups_to_dropbox_api_key
-      @turned_on = SiteSetting.discourse_backups_to_dropbox_enabled
+      @api_key = SiteSetting.discourse_sync_to_dropbox_api_key
+      @turned_on = SiteSetting.discourse_sync_to_dropbox_enabled
       @dbx = Dropbox::Client.new(@api_key)
     end
 
@@ -26,7 +26,7 @@ module DiscourseBackupToDropbox
 
       dropbox_backup_files = @dbx.list_folder("/#{folder_name}").map(&:name)
 
-      local_backup_files = Backup.all.map(&:filename).take(SiteSetting.discourse_backups_to_dropbox_quantity)
+      local_backup_files = Backup.all.map(&:filename).take(SiteSetting.discourse_sync_to_dropbox_quantity)
 
       (local_backup_files - dropbox_backup_files).each do |filename|
         full_path = Backup[filename].path
@@ -38,9 +38,7 @@ module DiscourseBackupToDropbox
         @dbx.delete("/#{folder_name}/#{filename}")
       end
     end
-##################################################################################
-    # renamed @dbx for dbx as we must memoize the call
-    # deleted dbx argument in both uploads because of memoization
+
     def self.upload(folder_name, file_name, full_path, size)
       if size < UPLOAD_MAX_SIZE then
         dbx.upload("/#{folder_name}/#{file_name}", File.open(full_path, "r"))
@@ -62,6 +60,6 @@ module DiscourseBackupToDropbox
         dbx.finish_upload_session(cursor, "/#{folder_name}/#{file_name}", f.read(CHUNK_SIZE))
       end
     end
-##################################################################################
+
   end
 end
