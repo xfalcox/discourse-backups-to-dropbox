@@ -5,8 +5,8 @@ module DiscourseBackupToDropbox
 
     def initialize(backup)
       super(backup) #need to initialize neccessary params for the can_sync?
-      @api_key   = SiteSetting.discourse_backups_to_dropbox_api_key
-      @turned_on = SiteSetting.discourse_backups_to_dropbox_enabled
+      @api_key   = SiteSetting.discourse_sync_to_dropbox_api_key
+      @turned_on = SiteSetting.discourse_sync_to_dropbox_enabled
     end
 
     def dbx
@@ -28,7 +28,7 @@ module DiscourseBackupToDropbox
       end
       dropbox_backup_files   = dbx.list_folder("/#{folder_name}").map(&:name)
     end
-
+    
     def perform_sync
       full_path  = backup.path   # took out the loop here
       filename   = backup.filename
@@ -50,9 +50,7 @@ module DiscourseBackupToDropbox
     def chunked_upload(folder_name, file_name, full_path)
       File.open(full_path) do |f|
         loops = f.size / CHUNK_SIZE
-
         cursor = dbx.start_upload_session(f.read(CHUNK_SIZE))
-
         (loops-1).times do |i|
           dbx.append_upload_session( cursor, f.read(CHUNK_SIZE) )
         end
