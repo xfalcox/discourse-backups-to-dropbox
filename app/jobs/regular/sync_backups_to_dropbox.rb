@@ -4,7 +4,7 @@ module Jobs
   	sidekiq_options queue: 'low'
 
     def execute(args)
-      Backup.all.take(SiteSetting.discourse_sync_to_dropbox_quantity) do |backup|
+      Backup.all.map(&:filename).take(SiteSetting.discourse_sync_to_dropbox_quantity) do |backup|
         DiscourseBackupToDropbox::DropboxSynchronizer.new(backup).sync # sync inherited from base class, which results in perform_sync
       end
     end
