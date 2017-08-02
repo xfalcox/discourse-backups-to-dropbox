@@ -11,14 +11,12 @@ gem 'addressable', '2.5.1', {require: false }
 gem 'http_parser.rb', '0.6.0', {require: false }
 gem 'http-cookie', '1.0.3', {require: false }
 gem 'http-form_data', '1.0.1', {require: false }
-
 gem 'http', '2.0.3', {require: false }
-
 gem 'dropbox-sdk-v2', '0.0.3', { require: false }
+require 'dropbox'
+require 'sidekiq'
 
 enabled_site_setting :discourse_sync_to_dropbox_enabled
-
-require 'dropbox'
 
 after_initialize do
 
@@ -32,4 +30,3 @@ after_initialize do
     end
   end
 end
-
