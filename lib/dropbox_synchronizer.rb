@@ -26,7 +26,11 @@ module DiscourseBackupToDropbox
       rescue
         #folder already exists
       end
-      dbx_files = dbx.list_folder("/#{folder_name}").map(&:name)
+      dbx_files = dbx.list_folder("/#{folder_name}")
+      upload_unique_files(folder_name, dbx_files)
+    end
+
+    def upload_unique_files(folder_name, dbx_files)
       ([backup] - dbx_files).each do |f|
         if f.present?
           full_path  = f.path
@@ -35,11 +39,13 @@ module DiscourseBackupToDropbox
           upload(folder_name, filename, full_path, size)
         end
       end
-      (dbx_files - [backup]).each do |f| # this needs to be tested 
-        dbx.delete("/#{folder_name}/#{filename}")
-      end
     end
-
+    # 
+    # def delete_old_remote_backups
+    #   (dbx_files - [backup]).each do |f| # this needs to be tested
+    #     dbx.delete("/#{folder_name}/#{filename}")
+    #   end
+    # end
 
     def upload(folder_name, file_name, full_path, size)
       if size < UPLOAD_MAX_SIZE then
