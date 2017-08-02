@@ -40,12 +40,6 @@ module DiscourseBackupToDropbox
         end
       end
     end
-    # 
-    # def delete_old_remote_backups
-    #   (dbx_files - [backup]).each do |f| # this needs to be tested
-    #     dbx.delete("/#{folder_name}/#{filename}")
-    #   end
-    # end
 
     def upload(folder_name, file_name, full_path, size)
       if size < UPLOAD_MAX_SIZE then
@@ -62,7 +56,6 @@ module DiscourseBackupToDropbox
         (loops-1).times do |i|
           dbx.append_upload_session( cursor, f.read(CHUNK_SIZE) )
         end
-
         dbx.finish_upload_session(cursor, "/#{folder_name}/#{file_name}", f.read(CHUNK_SIZE))
       end
     end
