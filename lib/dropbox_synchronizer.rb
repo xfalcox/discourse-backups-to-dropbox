@@ -18,14 +18,6 @@ module DiscourseBackupToDropbox
     end
 
     protected
-    # def perform_sync
-    #   folder_name = "one"
-    #   dbx.create_folder("/#{folder_name}")
-    #   full_path = backup.path
-    #   filename = backup.filename
-    #   size = backup.size
-    #   upload(folder_name, filename, full_path, size)
-    # end
 
     def perform_sync
       folder_name = Discourse.current_hostname
@@ -35,7 +27,7 @@ module DiscourseBackupToDropbox
         #folder already exists
       end
       dbx_files = dbx.list_folder("/#{folder_name}").map(&:name)
-      (backup.filename - dbx_files).each do |f|
+      ([backup] - dbx_files).each do |f|
         if f.present?
           full_path  = f.path
           filename   = f.filename
@@ -43,22 +35,12 @@ module DiscourseBackupToDropbox
           upload(folder_name, filename, full_path, size)
         end
       end
+      (dbx_files - [backup]).each do |f| # this needs to be tested 
+        dbx.delete("/#{folder_name}/#{filename}")
+      end
     end
-    # def add_to_folder(file)
-    #   folder_name = Discourse.current_hostname
-    #   begin
-    #     folder = dbx.create_folder("/#{folder_name}")
-    #   rescue
-    #     #folder already exists
-    #   end
-    #   folder.add(file)
-    # end
-    #
-    # dropbox_backup_files   = dbx.list_folder("/#{folder_name}").map(&:name)
-    # file_difference_remote = dropbox_backup_files - local_backup_files
-    # file_difference_remote.dbx.delete("/#{folder_name}/#{filename}") # used dbx, as a method here
 
-#
+
     def upload(folder_name, file_name, full_path, size)
       if size < UPLOAD_MAX_SIZE then
         dbx.upload("/#{folder_name}/#{file_name}", "#{file_name}")
@@ -78,6 +60,6 @@ module DiscourseBackupToDropbox
         dbx.finish_upload_session(cursor, "/#{folder_name}/#{file_name}", f.read(CHUNK_SIZE))
       end
     end
-#
+
   end
 end
