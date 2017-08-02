@@ -34,17 +34,15 @@ module DiscourseBackupToDropbox
       rescue
         #folder already exists
       end
-      file_name = backup.filename
-      dbx.upload("/#{folder_name}/#{file_name}", "#{file_name}")
-      # dbx_files = dbx.list_folder("/#{folder_name}")
-      # (backup - dbx_files).each do |f|
-      #   # if f.present?
-      #     full_path  = f.path
-      #     filename   = f.filename
-      #     size       = f.size
-      #     upload(folder_name, filename, full_path, size)
-      #   # end
-      # end
+      dbx_files = dbx.list_folder("/#{folder_name}").map(&:name)
+      (backup.filename - dbx_files).each do |f|
+        if f.present?
+          full_path  = f.path
+          filename   = f.filename
+          size       = f.size
+          upload(folder_name, filename, full_path, size)
+        end
+      end
     end
     # def add_to_folder(file)
     #   folder_name = Discourse.current_hostname
@@ -61,25 +59,25 @@ module DiscourseBackupToDropbox
     # file_difference_remote.dbx.delete("/#{folder_name}/#{filename}") # used dbx, as a method here
 
 #
-#     def upload(folder_name, file_name, full_path, size)
-#       if size < UPLOAD_MAX_SIZE then
-#         dbx.upload("/#{folder_name}/#{file_name}", "#{file_name}")
-#       else
-#         backup.chunked_upload(folder_name, file_name, full_path)
-#       end
-#     end
-#
-#     def chunked_upload(folder_name, file_name, full_path)
-#       File.open(full_path) do |f|
-#         loops = f.size / CHUNK_SIZE
-#         cursor = dbx.start_upload_session(f.read(CHUNK_SIZE))
-#         (loops-1).times do |i|
-#           dbx.append_upload_session( cursor, f.read(CHUNK_SIZE) )
-#         end
-#
-#         dbx.finish_upload_session(cursor, "/#{folder_name}/#{file_name}", f.read(CHUNK_SIZE))
-#       end
-#     end
+    def upload(folder_name, file_name, full_path, size)
+      if size < UPLOAD_MAX_SIZE then
+        dbx.upload("/#{folder_name}/#{file_name}", "#{file_name}")
+      else
+        backup.chunked_upload(folder_name, file_name, full_path)
+      end
+    end
+
+    def chunked_upload(folder_name, file_name, full_path)
+      File.open(full_path) do |f|
+        loops = f.size / CHUNK_SIZE
+        cursor = dbx.start_upload_session(f.read(CHUNK_SIZE))
+        (loops-1).times do |i|
+          dbx.append_upload_session( cursor, f.read(CHUNK_SIZE) )
+        end
+
+        dbx.finish_upload_session(cursor, "/#{folder_name}/#{file_name}", f.read(CHUNK_SIZE))
+      end
+    end
 #
   end
 end
