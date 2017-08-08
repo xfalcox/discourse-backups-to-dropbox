@@ -28,6 +28,7 @@ module DiscourseBackupToDropbox
       end
       dbx_files = dbx.list_folder("/#{folder_name}")
       upload_unique_files(folder_name, dbx_files)
+      delete_old_files
     end
 
     def upload_unique_files(folder_name, dbx_files)
@@ -38,6 +39,13 @@ module DiscourseBackupToDropbox
           size       = f.size
           upload(folder_name, filename, full_path, size)
         end
+      end
+    end
+
+    def delete_old_files
+      dbx_files = dbx.list_folder("/#{folder_name}").map(&:name)
+      (dbx_files - [backup].map(&:filename)).each do |f|
+        dbx.delete("/#{folder_name}/#{f}")
       end
     end
 
