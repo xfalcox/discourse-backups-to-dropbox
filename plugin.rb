@@ -12,10 +12,10 @@ gem 'http-cookie', '1.0.3', {require: false }
 gem 'http-form_data', '1.0.1', {require: false }
 gem 'http', '2.0.3', {require: false }
 gem 'dropbox-sdk-v2', '0.0.3', { require: false }
+require 'dropbox'
+require 'sidekiq'
 
 enabled_site_setting :discourse_sync_to_dropbox_enabled
-
-require 'dropbox'
 
 after_initialize do
   load File.expand_path("../app/jobs/regular/sync_backups_to_dropbox.rb", __FILE__)
