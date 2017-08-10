@@ -48,7 +48,7 @@ module DiscourseBackupToDropbox
       sorted = dbx_files.sort_by {|x| x.server_modified}
       keep = sorted.take(SiteSetting.discourse_sync_to_dropbox_quantity)
       trash = dbx_files - keep
-      trash.each {|f| dbx.delete("/#{folder_name}/#{f}")}
+      trash.each {|f| dbx.delete("#{f.path_lower}")}
     end
 
     def upload(folder_name, file_name, full_path, size)
