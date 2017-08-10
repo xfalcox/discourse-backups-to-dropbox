@@ -17,6 +17,14 @@ module DiscourseBackupToDropbox
       @turned_on && @api_key.present? && backup.present?
     end
 
+    def delete_old_files
+      folder_name = Discourse.current_hostname
+      dbx_files = dbx.list_folder("/#{folder_name}").map(&:name).reverse!
+      keep = dbx_files.take(SiteSetting.discourse_sync_to_dropbox_quantity)
+      trash = dbx_files - keep
+      trash.each {|f| dbx.delete("/#{folder_name}/#{f}")}
+    end
+
     protected
 
     def perform_sync
@@ -39,14 +47,6 @@ module DiscourseBackupToDropbox
           upload(folder_name, filename, full_path, size)
         end
       end
-    end
-
-    def delete_old_files
-      folder_name = Discourse.current_hostname
-      dbx_files = dbx.list_folder("/#{folder_name}").map(&:name).reverse!
-      keep = dbx_files.take(SiteSetting.discourse_sync_to_dropbox_quantity)
-      trash = dbx_files - keep
-      trash.each {|f| dbx.delete("/#{folder_name}/#{f}")}
     end
 
     def upload(folder_name, file_name, full_path, size)

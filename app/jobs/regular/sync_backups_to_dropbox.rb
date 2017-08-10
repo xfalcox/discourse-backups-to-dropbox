@@ -1,3 +1,5 @@
+require_relative '../../../lib/dropbox_synchronizer.rb'
+
 module Jobs
   class SyncBackupsToDropbox < ::Jobs::Base
 
@@ -8,7 +10,7 @@ module Jobs
       backups.each do |backup|
         DiscourseBackupToDropbox::DropboxSynchronizer.new(backup).sync
       end
-      DiscourseBackupToDropbox::DropboxSynchronizer.delete_old_files
+      DiscourseBackupToDropbox::DropboxSynchronizer.new(backups).delete_old_files
     end
   end
 end
