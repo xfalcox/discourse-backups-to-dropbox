@@ -1,7 +1,7 @@
 module DiscourseBackupToDropbox
   class DropboxSynchronizer < Synchronizer
-    CHUNK_SIZE = 25600000
-    UPLOAD_MAX_SIZE = CHUNK_SIZE * 4
+    CHUNK_SIZE ||= 25600000
+    UPLOAD_MAX_SIZE ||= CHUNK_SIZE * 4
 
     def initialize(backup)
       super(backup)
@@ -18,30 +18,42 @@ module DiscourseBackupToDropbox
     end
 
     protected
-    def perform_sync
-      full_path  = backup.path
-      filename   = backup.filename
-      size       = backup.size
-      file       = upload(filename, full_path, size)
-      add_to_folder(file)
-      dropbox_backup_files   = dbx.list_folder("/#{folder_name}").map(&:name)
-      file_difference_remote = dropbox_backup_files - local_backup_files
-      file_difference_remote.dbx.delete("/#{folder_name}/#{filename}") # used dbx, as a method here
-    end
 
-    def add_to_folder(file)
+    def perform_sync
       folder_name = Discourse.current_hostname
       begin
-        folder = dbx.create_folder("/#{folder_name}")
+        dbx.create_folder("/#{folder_name}")
       rescue
         #folder already exists
       end
-      folder.add(file)
-    end                                                                  # and took out the loop
+      dbx_files = dbx.list_folder("/#{folder_name}")
+      upload_unique_files(folder_name, dbx_files)
+      delete_old_files
+    end
+
+    def upload_unique_files(folder_name, dbx_files)
+      ([backup] - dbx_files).each do |f|
+        if f.present?
+          full_path  = f.path
+          filename   = f.filename
+          size       = f.size
+          upload(folder_name, filename, full_path, size)
+        end
+      end
+    end
+
+    def delete_old_files
+      folder_name = Discourse.current_hostname
+      dbx_files = dbx.list_folder("/#{folder_name}")
+      sorted = dbx_files.sort_by {|x| x.server_modified}
+      keep = sorted.take(SiteSetting.discourse_sync_to_dropbox_quantity)
+      trash = dbx_files - keep
+      trash.each {|f| dbx.delete("#{f.path_lower}")}
+    end
 
     def upload(folder_name, file_name, full_path, size)
       if size < UPLOAD_MAX_SIZE then
-        dbx.upload("/#{folder_name}/#{file_name}", File.open(full_path, "r"))
+        dbx.upload("/#{folder_name}/#{file_name}", "#{file_name}")
       else
         backup.chunked_upload(folder_name, file_name, full_path)
       end
@@ -54,7 +66,6 @@ module DiscourseBackupToDropbox
         (loops-1).times do |i|
           dbx.append_upload_session( cursor, f.read(CHUNK_SIZE) )
         end
-
         dbx.finish_upload_session(cursor, "/#{folder_name}/#{file_name}", f.read(CHUNK_SIZE))
       end
     end
