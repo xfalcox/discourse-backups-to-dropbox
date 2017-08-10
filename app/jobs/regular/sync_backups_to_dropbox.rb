@@ -8,6 +8,7 @@ module Jobs
       backups.each do |backup|
         DiscourseBackupToDropbox::DropboxSynchronizer.new(backup).sync
       end
+      DiscourseBackupToDropbox::DropboxSynchronizer.delete_old_files
     end
   end
 end

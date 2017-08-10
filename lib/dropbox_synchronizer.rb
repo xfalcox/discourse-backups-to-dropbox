@@ -28,7 +28,6 @@ module DiscourseBackupToDropbox
       end
       dbx_files = dbx.list_folder("/#{folder_name}")
       upload_unique_files(folder_name, dbx_files)
-      delete_old_files
     end
 
     def upload_unique_files(folder_name, dbx_files)
@@ -44,11 +43,10 @@ module DiscourseBackupToDropbox
 
     def delete_old_files
       folder_name = Discourse.current_hostname
-      dbx_files = dbx.list_folder("/#{folder_name}")
-      sorted = dbx_files.sort_by {|x| x.server_modified}
-      keep = sorted.take(SiteSetting.discourse_sync_to_dropbox_quantity)
+      dbx_files = dbx.list_folder("/#{folder_name}").map(&:name).reverse!
+      keep = dbx_files.take(SiteSetting.discourse_sync_to_dropbox_quantity)
       trash = dbx_files - keep
-      trash.each {|f| dbx.delete("#{f.path_lower}")}
+      trash.each {|f| dbx.delete("/#{folder_name}/#{f}")}
     end
 
     def upload(folder_name, file_name, full_path, size)
