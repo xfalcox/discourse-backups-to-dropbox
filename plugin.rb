@@ -21,9 +21,7 @@ after_initialize do
   load File.expand_path("../app/jobs/regular/sync_backups_to_dropbox.rb", __FILE__)
   load File.expand_path("../lib/dropbox_synchronizer.rb", __FILE__)
 
-  Backup.class_eval do
-    def after_create_hook
-      Jobs.enqueue(:sync_backups_to_dropbox)
-    end
+  DiscourseEvent.on(:backup_created) do
+    Jobs.enqueue(:sync_backups_to_dropbox)
   end
 end
