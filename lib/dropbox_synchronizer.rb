@@ -53,7 +53,7 @@ module DiscourseBackupToDropbox
       if size < UPLOAD_MAX_SIZE then
         dbx.upload("/#{folder_name}/#{file_name}", "#{file_name}")
       else
-        backup.chunked_upload(folder_name, file_name, full_path)
+        chunked_upload(folder_name, file_name, full_path)
       end
     end
 
