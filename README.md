@@ -1,11 +1,9 @@
-# Discourse Sync to Dropbox
+# Discourse Backups to Dropbox
 
 Backups are useless unless they are off-site. This plugin sync your automatic backups on Dropbox.
 
 
 ## Installation
-
-Install the [Discourse Sync Base](https://github.com/berlindiamonds/discourse-sync-base) first
 
 Proceed with a normal [installation of a plugin](https://meta.discourse.org/t/install-a-plugin/19157?u=falco).
 

@@ -1,5 +1,5 @@
 it:
   site_settings:
-    discourse_sync_to_dropbox_enabled: "Abilitare il plugin dropbox backups. Dopo che lo avrai abilitato, funzionerà dal prossimo backup"
-    discourse_sync_to_dropbox_quantity: "Quanti backup verranno conservati su Dropbox"
-    discourse_sync_to_dropbox_api_key: "Il Dropbox Generated Access Token creato su https://www.dropbox.com/developers/apps/create"
+    discourse_backups_to_dropbox_enabled: "Abilitare il plugin dropbox backups. Dopo che lo avrai abilitato, funzionerà dal prossimo backup"
+    discourse_backups_to_dropbox_quantity: "Quanti backup verranno conservati su Dropbox"
+    discourse_backups_to_dropbox_api_key: "Il Dropbox Generated Access Token creato su https://www.dropbox.com/developers/apps/create"

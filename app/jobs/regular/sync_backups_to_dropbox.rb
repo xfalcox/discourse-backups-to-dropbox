@@ -1,14 +1,10 @@
-module Jobs
+module Jobs  
   class SyncBackupsToDropbox < ::Jobs::Base
 
   	sidekiq_options queue: 'low'
 
     def execute(args)
-      backups = Backup.all.take(SiteSetting.discourse_sync_to_dropbox_quantity)
-      backups.each do |backup|
-        DiscourseBackupToDropbox::DropboxSynchronizer.new(backup).sync
-      end
-      DiscourseBackupToDropbox::DropboxSynchronizer.new(backups).delete_old_files
+      ::DiscourseBackupToDropbox::DropboxSynchronizer.sync if SiteSetting.discourse_backups_to_dropbox_enabled
     end
   end
 end

@@ -1,7 +1,7 @@
 plugins:
-  discourse_sync_to_dropbox_enabled:
+  discourse_backups_to_dropbox_enabled:
     default: false
-  discourse_sync_to_dropbox_quantity:
+  discourse_backups_to_dropbox_quantity:
     default: 5
-  discourse_sync_to_dropbox_api_key:
+  discourse_backups_to_dropbox_api_key:
     default: ''
